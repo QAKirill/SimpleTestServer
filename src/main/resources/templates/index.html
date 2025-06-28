@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management - Testing UI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"] { width: 100%; padding: 8px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>User Management</h1>
+
+    <!-- Форма добавления пользователя -->
+    <h2>Add New User</h2>
+    <form th:action="@{/add-user}" method="post" id="userForm">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+        </div>
+        <button type="submit">Add User</button>
+    </form>
+
+    <!-- Список пользователей -->
+    <h2>User List</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Тестовый блок для UI тестов -->
+    <div id="test-section" style="margin-top: 30px; padding: 10px; background-color: #f8f8f8;">
+        <h3>Testing Area</h3>
+        <button id="test-button">Click Me!</button>
+        <p id="test-message">Button not clicked yet</p>
+    </div>
+</div>
+
+<script>
+    // Простой JavaScript для тестирования
+    document.getElementById('test-button').addEventListener('click', function() {
+        document.getElementById('test-message').textContent = 'Button clicked! 🎉';
+    });
+</script>
+</body>
+</html>

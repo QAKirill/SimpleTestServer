@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(
-        classes = SimpleTestServerApplication.class, // Явное указание главного класса!
+        classes = SimpleTestServerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 public class TestBase {

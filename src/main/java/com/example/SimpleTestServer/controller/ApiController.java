@@ -1,59 +1,59 @@
 package com.example.SimpleTestServer.controller;
 
 import com.example.SimpleTestServer.model.User;
+import com.example.SimpleTestServer.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class ApiController {
 
-    private final List<User> users = new ArrayList<>();
-    private final AtomicLong counter = new AtomicLong();
+    private final UserRepository userRepository;
 
-    public ApiController() {
-        users.add(new User(counter.incrementAndGet(), "Иван Иванов", "ivan@example.com"));
-        users.add(new User(counter.incrementAndGet(), "Мария Петрова", "maria@example.com"));
+    public ApiController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        // Проверка на уникальность email
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.created(URI.create("/api/users/" + savedUser.getId()))
+                .body(savedUser);
     }
 
-    @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
-        User newUser = new User(counter.incrementAndGet(), user.getName(), user.getEmail());
-        users.add(newUser);
-        return newUser;
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = getUserById(id);
-        user.setName(updatedUser.getName());
-        user.setEmail(updatedUser.getEmail());
-        return user;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        users.removeIf(user -> user.getId().equals(id));
-    }
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Привет! Сервер работает!";
+    @GetMapping(value = "/hello", produces = "application/json")
+    public Map<String, String> hello() {
+        return Map.of("message", "Привет! Сервер работает!");
     }
 }

@@ -1,0 +1,8 @@
+.gradle
+gradle
+build
+.git
+.gitignore
+README.md
+*.iml
+.idea

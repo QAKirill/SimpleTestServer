@@ -13,7 +13,7 @@ class ApiTests extends TestBase {
 	void contextLoads() {
 		Response response = RestAssured
 				.given()
-				.basePath("/api")
+				.basePath("/api/users")
 				.when()
 				.get("/hello")
 				.then()

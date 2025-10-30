@@ -1,8 +1,26 @@
-.gradle
-gradle
-build
-.git
-.gitignore
-README.md
+# Gradle
+.gradle/
+build/
+gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
 *.iml
-.idea
+*.iws
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db

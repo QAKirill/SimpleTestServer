@@ -1,0 +1,7 @@
+app:
+  name: "Test Application"
+  environment: "TEST"
+
+  database:
+    url: "jdbc:h2:mem:testdb"
+    username: "sa"

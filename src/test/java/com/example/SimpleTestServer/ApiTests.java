@@ -1,8 +1,8 @@
 package com.example.SimpleTestServer;
 
+import com.example.SimpleTestServer.api.client.ApiClient;
 import com.example.SimpleTestServer.config.TestConfig;
 import com.example.SimpleTestServer.testcore.TestBase;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,14 @@ class ApiTests extends TestBase {
 	@Autowired
 	private TestConfig config;
 
+	@Autowired
+	private ApiClient apiClient;
+
 	@Test
 	void contextLoads() {
-		Response response = RestAssured
-				.given()
-				.basePath("/api/users")
-				.when()
-				.get("/hello")
-				.then()
-				.log()
-				.body()
-				.statusCode(200)
-				.extract().response();
+		Response response = apiClient.getHello();
+
+		assertThat(response.statusCode()).isEqualTo(200);
 
 		String message = response.jsonPath().getString("message");
 

@@ -1,4 +1,4 @@
-package com.example.SimpleTestServer;
+package com.example.SimpleTestServer.tests;
 
 import com.example.SimpleTestServer.api.client.ApiClient;
 import com.example.SimpleTestServer.config.TestConfig;

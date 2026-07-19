@@ -3,6 +3,7 @@ package com.example.SimpleTestServer.controller;
 import com.example.SimpleTestServer.model.User;
 import com.example.SimpleTestServer.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -20,11 +21,13 @@ public class ApiController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_users.read')")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_users.write')")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         // Проверка на уникальность email
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -37,6 +40,7 @@ public class ApiController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_users.read')")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         return userRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -44,6 +48,7 @@ public class ApiController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_users.write')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
